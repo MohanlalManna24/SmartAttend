@@ -1,0 +1,308 @@
+import { MdOutlineCancel } from "react-icons/md";
+import { FaRegCircleCheck } from "react-icons/fa6";
+import { ImCancelCircle } from "react-icons/im";
+import { MdPercent } from "react-icons/md";
+import { ImWink } from "react-icons/im";
+import useAttendanceStore from "../store/UseAttendanceStore";
+import { useEffect, useState } from "react";
+import Singin from "../SingIn.jsx";
+import useGlobalStore from "../store/GlobalStore";
+
+const StudentsZone = () => {
+  const singleStudent = useGlobalStore((state) => state.singleStudent);
+  const isSingin = useGlobalStore((state) => state.isSingin);
+  const setSingleStudent = useGlobalStore((state) => state.setSingleStudent);
+  const fetchStudents = useAttendanceStore((state) => state.fetchStudents);
+  const studentsList = useAttendanceStore((state) => state.studentsList);
+  
+  useEffect(() => {
+    console.log("Single Student Data:", singleStudent);
+  }, [singleStudent]);
+  // Get current date and time
+  const now = new Date();
+  const today_date = now.toLocaleDateString("en-GB").replace(/\//g, ".");
+
+  // Calculate tomorrow's date
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tommorow_date = tomorrow
+    .toLocaleDateString("en-GB")
+    .replace(/\//g, ".");
+
+  const handlePresent = async () => {
+    try {
+      await useAttendanceStore
+        .getState()
+        .markAttendance(singleStudent.id, "present");
+      
+      // Refresh student data
+      await fetchStudents();
+      const updatedStudent = useAttendanceStore.getState().studentsList.find(s => s.id === singleStudent.id);
+      if (updatedStudent) {
+        setSingleStudent(updatedStudent);
+      }
+      
+      alert("Attendance marked as Present!");
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+  const haldleAbsent = async () => {
+    try {
+      await useAttendanceStore
+        .getState()
+        .markAttendance(singleStudent.id, "absent");
+      
+      // Refresh student data
+      await fetchStudents();
+      const updatedStudent = useAttendanceStore.getState().studentsList.find(s => s.id === singleStudent.id);
+      if (updatedStudent) {
+        setSingleStudent(updatedStudent);
+      }
+      
+      alert("Attendance marked as Absent!");
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const weeklyAttendance = singleStudent.attendance || [];
+
+  // Get current week's attendance (Sunday to today)
+  const getCurrentWeekAttendance = () => {
+    const today = new Date();
+    const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    
+    // Calculate last Sunday
+    const lastSunday = new Date(today);
+    lastSunday.setDate(today.getDate() - currentDay);
+    lastSunday.setHours(0, 0, 0, 0);
+    
+    // Filter attendance from last Sunday to today
+    const currentWeekData = weeklyAttendance.filter(entry => {
+      const entryDate = new Date(entry.date.split(".").reverse().join("-"));
+      return entryDate >= lastSunday && entryDate <= today;
+    });
+    
+    // Sort by date
+    return currentWeekData.sort((a, b) => {
+      const dateA = new Date(a.date.split(".").reverse().join("-"));
+      const dateB = new Date(b.date.split(".").reverse().join("-"));
+      return dateA - dateB;
+    });
+  };
+
+  const currentWeekAttendance = getCurrentWeekAttendance();
+
+  if (!isSingin) {
+    return <Singin />;
+  }
+  return (
+    <div className="studentsZone container mx-auto px-4 py-3 min-h-screen bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50 ">
+      {/* Welcome Header Card */}
+      <div className="info m-5">
+        <h1 className="text-center text-4xl font-bold pb-4 animate-fade-in">
+          Welcome, {singleStudent.fullName}! 👋
+        </h1>
+        <p className="text-center text-lg text-blue-100 font-light">
+          <span className="inline-flex items-center bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm">
+            <b className="text-black">Roll Number:</b>
+            <span className="ml-2 text-blue-800">
+              {singleStudent.rollNumber}
+            </span>
+          </span>
+          <span className="mx-3 text-blue-400">●</span>
+          <span className="inline-flex items-center bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm">
+            <b className="text-black">Registration Number:</b>
+            <span className="ml-2 text-blue-800">
+              {singleStudent.registrationNumber}
+            </span>
+          </span>
+        </p>
+      </div>
+
+      {/* Main Content Grid */}
+      <div className="flex flex-col lg:flex-row gap-8 mb-8">
+        {/* Weekly Attendance Process */}
+        <div className="AttendanceProcess bg-white border border-gray-200 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 w-full lg:w-2/3 transform hover:-translate-y-1">
+          {/* Tomorrow's Confirmation Card */}
+          <div className="m-8 mt-0 bg-linear-to-br from-indigo-50 via-purple-50 to-pink-50 p-8 rounded-2xl border-2 border-indigo-100 shadow-lg hover:shadow-2xl transition-all duration-300 sm:w-3/4 lg:w-2/3 mx-auto">
+            <div className="flex flex-col items-center">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <div className="w-1 h-10 bg-linear-to-b from-indigo-500 to-purple-600 rounded-full"></div>
+                <h2 className="text-2xl sm:text-3xl font-bold bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-center">
+                  Attendance Confirmation
+                </h2>
+                <div className="w-1 h-10 bg-linear-to-b from-purple-600 to-indigo-500 rounded-full"></div>
+              </div>
+
+              <div className="mb-6 text-center">
+                <p className="text-gray-700 text-lg font-medium mb-1">
+                  Please confirm your attendance for tomorrow
+                </p>
+                <p className="text-sm text-gray-500 bg-white/60 px-4 py-2 rounded-full inline-block backdrop-blur-sm">
+                  📅 {tommorow_date}
+                </p>
+              </div>
+
+              <div className="options flex flex-col sm:flex-row gap-3 sm:gap-4 w-full max-w-2xl">
+                <button
+                  className="group relative flex-1 px-4 sm:px-6 py-4 sm:py-5 cursor-pointer bg-linear-to-r from-green-500 to-emerald-600 text-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 font-semibold text-base sm:text-lg overflow-hidden border-2 border-green-400/50"
+                  onClick={handlePresent}
+                >
+                  <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
+                  <span className="relative flex items-center justify-center gap-2 sm:gap-3">
+                    <FaRegCircleCheck className="text-xl sm:text-2xl group-hover:rotate-12 transition-transform duration-300 shrink-0" />
+                    <span className="flex flex-col items-start">
+                      <span className="text-base sm:text-xl">Will Attend</span>
+                      <span className="text-xs text-green-100 font-normal">
+                        I'll be present tomorrow
+                      </span>
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  className="group relative flex-1 px-4 sm:px-6 py-4 sm:py-5 cursor-pointer bg-linear-to-r from-red-500 to-rose-600 text-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 font-semibold text-base sm:text-lg overflow-hidden border-2 border-red-400/50"
+                  onClick={haldleAbsent}
+                >
+                  <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
+                  <span className="relative flex items-center justify-center gap-2 sm:gap-3">
+                    <MdOutlineCancel className="text-xl sm:text-2xl group-hover:rotate-12 transition-transform duration-300 shrink-0" />
+                    <span className="flex flex-col items-start">
+                      <span className="text-base sm:text-xl">Will Not Attend</span>
+                      <span className="text-xs text-red-100 font-normal">
+                        I'll be absent tomorrow
+                      </span>
+                    </span>
+                  </span>
+                </button>
+              </div>
+
+              <p className="mt-6 text-xs text-gray-500 text-center max-w-md">
+                💡 Your confirmation helps us plan better. Please submit before
+                11:59 PM tonight.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-1 h-8 bg-linear-to-b from-blue-500 to-indigo-600 rounded-full"></div>
+            <h2 className="text-3xl font-bold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              Weekly Attendance Process
+            </h2>
+          </div>
+
+          <div className="weeklyProcess grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
+            {currentWeekAttendance.map((entry, index) => {
+              const dayNames = [
+                "Sunday",
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+              ];
+              const entryDate = new Date(
+                entry.date.split(".").reverse().join("-")
+              );
+              const dayName = dayNames[entryDate.getDay()];
+              return (
+                <div
+                  key={index}
+                  className={`day flex flex-col gap-3 justify-center items-center p-4 rounded-xl shadow-md hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer group border-2 border-transparent ${
+                    entry.status === "present"
+                      ? "bg-linear-to-br from-green-50 to-green-100 hover:border-green-300"
+                      : entry.status === "absent"
+                      ? "bg-linear-to-br from-red-50 to-red-100 hover:border-red-300"
+                      : "bg-linear-to-br from-blue-50 to-blue-100 hover:border-blue-300"
+                  }`}
+                >
+                  <h3 className="font-semibold text-gray-700 group-hover:text-gray-900 transition-colors">
+                    {dayName}
+                  </h3>
+                  <span
+                    className={`p-3 rounded-full transition-all duration-300 group-hover:rotate-12 ${
+                      entry.status === "present"
+                        ? "bg-green-100 group-hover:bg-green-200"
+                        : entry.status === "absent"
+                        ? "bg-red-100 group-hover:bg-red-200"
+                        : "bg-blue-100 group-hover:bg-blue-200"
+                    }`}
+                  >
+                    {entry.status === "present" ? (
+                      <FaRegCircleCheck className="text-green-500 text-3xl group-hover:scale-110 transition-transform" />
+                    ) : entry.status === "absent" ? (
+                      <MdOutlineCancel className="text-red-500 text-3xl group-hover:scale-110 transition-transform" />
+                    ) : (
+                      <ImWink className="text-blue-500 text-3xl group-hover:scale-110 transition-transform" />
+                    )}
+                  </span>
+                  <p
+                    className={`text-sm font-medium ${
+                      entry.status === "present"
+                        ? "text-green-600"
+                        : entry.status === "absent"
+                        ? "text-red-600"
+                        : "text-blue-600"
+                    }`}
+                  >
+                    {entry.status.charAt(0).toUpperCase() +
+                      entry.status.slice(1)}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Attendance Summary */}
+        <div className="attendanceSummary bg-white border border-gray-200 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 w-full lg:w-1/3 transform hover:-translate-y-1">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-1 h-8 bg-linear-to-b from-purple-500 to-pink-600 rounded-full"></div>
+            <h2 className="text-2xl font-bold bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Attendance Summary
+            </h2>
+          </div>
+
+          {/* Overall Percentage Card */}
+          <div className="flex items-center gap-4 mt-5 p-4 bg-linear-to-r from-purple-50 to-pink-50 rounded-xl hover:shadow-lg transition-all duration-300 group cursor-pointer border-2 border-transparent hover:border-purple-300">
+            <span className="p-3 bg-purple-100 rounded-full group-hover:bg-purple-200 transition-all duration-300 group-hover:rotate-12">
+              <MdPercent className="text-purple-600 text-2xl group-hover:scale-110 transition-transform" />
+            </span>
+            <span className="flex-1 font-medium text-gray-700 group-hover:text-purple-600 transition-colors">
+              Overall Percentage
+            </span>
+            <span className="text-2xl font-bold bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              90%
+            </span>
+          </div>
+
+          {/* Total Present Card */}
+          <div className="flex items-center gap-4 mt-4 p-4 bg-linear-to-r from-green-50 to-emerald-50 rounded-xl hover:shadow-lg transition-all duration-300 group cursor-pointer border-2 border-transparent hover:border-green-300">
+            <span className="p-3 bg-green-100 rounded-full group-hover:bg-green-200 transition-all duration-300 group-hover:rotate-12">
+              <FaRegCircleCheck className="text-green-600 text-2xl group-hover:scale-110 transition-transform" />
+            </span>
+            <span className="flex-1 font-medium text-gray-700 group-hover:text-green-600 transition-colors">
+              Total Present
+            </span>
+            <span className="text-2xl font-bold text-green-600">20</span>
+          </div>
+
+          {/* Total Absent Card */}
+          <div className="flex items-center gap-4 mt-4 p-4 bg-linear-to-r from-red-50 to-rose-50 rounded-xl hover:shadow-lg transition-all duration-300 group cursor-pointer border-2 border-transparent hover:border-red-300">
+            <span className="p-3 bg-red-100 rounded-full group-hover:bg-red-200 transition-all duration-300 group-hover:rotate-12">
+              <ImCancelCircle className="text-red-600 text-2xl group-hover:scale-110 transition-transform" />
+            </span>
+            <span className="flex-1 font-medium text-gray-700 group-hover:text-red-600 transition-colors">
+              Total Absent
+            </span>
+            <span className="text-2xl font-bold text-red-600">10</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default StudentsZone;
