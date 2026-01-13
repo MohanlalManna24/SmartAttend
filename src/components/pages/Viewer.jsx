@@ -50,7 +50,7 @@ const Viewer = () => {
   ).length;
 
   return (
-    <div className="viewer-container min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-6">
+    <div className="viewer-container min-h-screen bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
