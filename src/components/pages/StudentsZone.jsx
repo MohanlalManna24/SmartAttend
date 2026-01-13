@@ -14,7 +14,7 @@ const StudentsZone = () => {
   const setSingleStudent = useGlobalStore((state) => state.setSingleStudent);
   const fetchStudents = useAttendanceStore((state) => state.fetchStudents);
   const studentsList = useAttendanceStore((state) => state.studentsList);
-  
+
   useEffect(() => {
     console.log("Single Student Data:", singleStudent);
   }, [singleStudent]);
@@ -34,14 +34,16 @@ const StudentsZone = () => {
       await useAttendanceStore
         .getState()
         .markAttendance(singleStudent.id, "present");
-      
+
       // Refresh student data
       await fetchStudents();
-      const updatedStudent = useAttendanceStore.getState().studentsList.find(s => s.id === singleStudent.id);
+      const updatedStudent = useAttendanceStore
+        .getState()
+        .studentsList.find((s) => s.id === singleStudent.id);
       if (updatedStudent) {
         setSingleStudent(updatedStudent);
       }
-      
+
       alert("Attendance marked as Present!");
     } catch (error) {
       alert(error.message);
@@ -52,14 +54,16 @@ const StudentsZone = () => {
       await useAttendanceStore
         .getState()
         .markAttendance(singleStudent.id, "absent");
-      
+
       // Refresh student data
       await fetchStudents();
-      const updatedStudent = useAttendanceStore.getState().studentsList.find(s => s.id === singleStudent.id);
+      const updatedStudent = useAttendanceStore
+        .getState()
+        .studentsList.find((s) => s.id === singleStudent.id);
       if (updatedStudent) {
         setSingleStudent(updatedStudent);
       }
-      
+
       alert("Attendance marked as Absent!");
     } catch (error) {
       alert(error.message);
@@ -72,18 +76,18 @@ const StudentsZone = () => {
   const getCurrentWeekAttendance = () => {
     const today = new Date();
     const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
-    
+
     // Calculate last Sunday
     const lastSunday = new Date(today);
     lastSunday.setDate(today.getDate() - currentDay);
     lastSunday.setHours(0, 0, 0, 0);
-    
+
     // Filter attendance from last Sunday to today
-    const currentWeekData = weeklyAttendance.filter(entry => {
+    const currentWeekData = weeklyAttendance.filter((entry) => {
       const entryDate = new Date(entry.date.split(".").reverse().join("-"));
       return entryDate >= lastSunday && entryDate <= today;
     });
-    
+
     // Sort by date
     return currentWeekData.sort((a, b) => {
       const dateA = new Date(a.date.split(".").reverse().join("-"));
@@ -123,7 +127,6 @@ const StudentsZone = () => {
 
       {/* Main Content Grid */}
       <div className="flex flex-col lg:flex-row gap-8 mb-8">
-        {/* Weekly Attendance Process */}
         <div className="AttendanceProcess bg-white border border-gray-200 p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 w-full lg:w-2/3 transform hover:-translate-y-1">
           {/* Tomorrow's Confirmation Card */}
           <div className="m-8 mt-0 bg-linear-to-br from-indigo-50 via-purple-50 to-pink-50 p-8 rounded-2xl border-2 border-indigo-100 shadow-lg hover:shadow-2xl transition-all duration-300 sm:w-3/4 lg:w-2/3 mx-auto">
@@ -170,7 +173,9 @@ const StudentsZone = () => {
                   <span className="relative flex items-center justify-center gap-2 sm:gap-3">
                     <MdOutlineCancel className="text-xl sm:text-2xl group-hover:rotate-12 transition-transform duration-300 shrink-0" />
                     <span className="flex flex-col items-start">
-                      <span className="text-base sm:text-xl">Will Not Attend</span>
+                      <span className="text-base sm:text-xl">
+                        Will Not Attend
+                      </span>
                       <span className="text-xs text-red-100 font-normal">
                         I'll be absent tomorrow
                       </span>
@@ -185,6 +190,7 @@ const StudentsZone = () => {
               </p>
             </div>
           </div>
+          {/* Weekly Attendance Process */}
           <div className="flex items-center gap-3 mb-6">
             <div className="w-1 h-8 bg-linear-to-b from-blue-500 to-indigo-600 rounded-full"></div>
             <h2 className="text-3xl font-bold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
