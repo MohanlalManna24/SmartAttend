@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { GiGraduateCap } from "react-icons/gi";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
+import { MdLogout } from "react-icons/md";
 import { NavLink } from "react-router-dom";
+import useGlobalStore from "./store/GlobalStore";
 
 const Navbar = () => {
   const [currentTime, setCurrentTime] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isSinginFalse = useGlobalStore((state) => state.setIsSinginFalse);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -80,7 +83,7 @@ const Navbar = () => {
               alt="Profile"
             />
           </div>
-          
+
           {/* Mobile Menu Button */}
           <button
             onClick={toggleMenu}
@@ -88,6 +91,13 @@ const Navbar = () => {
             aria-label="Toggle menu"
           >
             {isMenuOpen ? <HiX /> : <HiMenuAlt3 />}
+          </button>
+          <button
+            title="LogOut Your Account"
+            className="text-red-500 text-2xl bg-orange-100 rounded p-2 cursor-pointer hover:bg-orange-200"
+            onClick={() => isSinginFalse()}
+          >
+            <MdLogout />
           </button>
         </div>
       </div>
@@ -102,16 +112,28 @@ const Navbar = () => {
           <NavLink to="/" className={mobileActiveStyle} onClick={closeMenu}>
             Home
           </NavLink>
-          <NavLink to="/students" className={mobileActiveStyle} onClick={closeMenu}>
+          <NavLink
+            to="/students"
+            className={mobileActiveStyle}
+            onClick={closeMenu}
+          >
             Students Zone
           </NavLink>
-          <NavLink to="/viewer" className={mobileActiveStyle} onClick={closeMenu}>
+          <NavLink
+            to="/viewer"
+            className={mobileActiveStyle}
+            onClick={closeMenu}
+          >
             Viewer
           </NavLink>
-          <NavLink to="/admin" className={mobileActiveStyle} onClick={closeMenu}>
+          <NavLink
+            to="/admin"
+            className={mobileActiveStyle}
+            onClick={closeMenu}
+          >
             Admin
           </NavLink>
-          
+
           {/* Mobile Clock */}
           <div className="px-4 py-3 text-center text-blue-600 font-semibold">
             {currentTime || "00:00:00"}
