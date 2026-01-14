@@ -39,7 +39,6 @@ const Home = () => {
     { number: "99%", label: "Accuracy Rate" },
     { number: "24/7", label: "Availability" },
     { number: "1000+", label: "Students" },
-    { number: "50+", label: "Institutions" },
   ];
 
   return (
@@ -71,7 +70,7 @@ const Home = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <Link
                   to="/students"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transform hover:scale-105 transition-all shadow-lg hover:shadow-xl"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 z-10 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transform hover:scale-105 transition-all shadow-lg hover:shadow-xl"
                 >
                   <FaUserGraduate />
                   Student Zone
@@ -80,7 +79,7 @@ const Home = () => {
 
                 <Link
                   to="/viewer"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-gray-800 font-semibold rounded-xl border-2 border-gray-300 hover:border-blue-600 hover:text-blue-600 transform hover:scale-105 transition-all"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 z-10 bg-white text-gray-800 font-semibold rounded-xl border-2 border-gray-300 hover:border-blue-600 hover:text-blue-600 transform hover:scale-105 transition-all"
                 >
                   <FaChartLine />
                   Attendance Viewer
@@ -130,7 +129,7 @@ const Home = () => {
       {/* Stats Section */}
       <section className="py-12 bg-white/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="text-4xl font-bold text-blue-600 mb-2">
