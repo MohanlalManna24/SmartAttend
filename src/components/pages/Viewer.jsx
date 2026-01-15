@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { FaUsers, FaCheckCircle, FaClock } from "react-icons/fa";
+import { IoLogoWhatsapp } from "react-icons/io5";
+import { FiPhoneCall } from "react-icons/fi";
 import useAttendanceStore from "../store/UseAttendanceStore";
 
 const Viewer = () => {
   const [selectedDate, setSelectedDate] = useState("");
-  const [selectedClass, setSelectedClass] = useState("all");
   const studentsList = useAttendanceStore((state) => state.studentsList);
   const fetchStudents = useAttendanceStore((state) => state.fetchStudents);
 
@@ -15,25 +16,32 @@ const Viewer = () => {
     setSelectedDate(today);
   }, [fetchStudents]);
 
-  // Get today's date in DD.MM.YYYY format
+  // Get today's date 
   const getTodayDate = () => {
     const now = new Date();
     return now.toLocaleDateString("en-GB").replace(/\//g, ".");
   };
 
-  const todayDate = getTodayDate();
+  // Convert selected date to the format used in attendance (dd.mm.yyyy)
+  const getFormattedDate = (dateString) => {
+    if (!dateString) return getTodayDate();
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-GB").replace(/\//g, ".");
+  };
 
-  // Filter students based on today's attendance
+  const formattedSelectedDate = getFormattedDate(selectedDate);
+
+  // Filter students based on selected date's attendance
   const getAttendanceData = () => {
     return studentsList.map((student) => {
-      const todayAttendance = student.attendance?.find(
-        (att) => att.date === todayDate
+      const selectedDateAttendance = student.attendance?.find(
+        (att) => att.date === formattedSelectedDate
       );
 
       return {
         ...student,
-        todayStatus: todayAttendance?.status || "pending",
-        checkInTime: todayAttendance?.status === "present" ? "10:00 AM" : "--:-- AM",
+        todayStatus: selectedDateAttendance?.status || "pending",
+        checkInTime: selectedDateAttendance?.status === "present" ? selectedDateAttendance.time : selectedDateAttendance?.status === "absent" ? selectedDateAttendance.time : "--:--",
       };
     });
   };
@@ -58,7 +66,7 @@ const Viewer = () => {
             Attendance Monitor
           </h1>
 
-          {/* Filters */}
+          {/* Filters by using date */}
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative">
               <input
@@ -128,18 +136,21 @@ const Viewer = () => {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                <tr className="bg-gray-200 border-b border-gray-200">
+                  <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">
                     Student Name
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                  <th className="px-6 py-4 text-left text-sm font-bold text-gray-700 hidden sm:table-cell">
                     Student ID
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                  <th className="px-6 py-4 text-left text-sm font-bold text-gray-700 hidden sm:table-cell">
                     Check-in Time
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                  <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">
                     Status
+                  </th>
+                   <th className="px-6 py-4 text-center text-sm font-bold text-gray-700">
+                    Action
                   </th>
                 </tr>
               </thead>
@@ -148,15 +159,15 @@ const Viewer = () => {
                   attendanceData.map((student, index) => (
                     <tr
                       key={student.id}
-                      className="hover:bg-gray-50 transition-colors duration-200"
+                      className="even:bg-gray-100 hover:bg-blue-50 hover:text-blue-900 transition-colors duration-200"
                     >
-                      <td className="px-6 py-4 text-gray-800">
+                      <td className="px-6 py-4 text-gray-800  ">
                         {student.fullName}
                       </td>
-                      <td className="px-6 py-4 text-gray-600">
+                      <td className="px-6 py-4 text-gray-600 hidden sm:table-cell">
                         {student.rollNumber}
                       </td>
-                      <td className="px-6 py-4 text-gray-600">
+                      <td className="px-6 py-4 text-gray-600 hidden sm:table-cell">
                         {student.checkInTime}
                       </td>
                       <td className="px-6 py-4">
@@ -164,12 +175,20 @@ const Viewer = () => {
                           <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
                             Present
                           </span>
-                        ) : (
+                        ) :student.todayStatus === "absent" ?(
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">Absent</span>
+                        ) :(
                           <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-600">
                             <span className="w-2 h-2 bg-gray-400 rounded-full"></span>
                             Pending
                           </span>
                         )}
+                      </td>
+                       <td className="px-6 py-4 text-center text-gray-600 hidden sm:table-cell">
+                        <div className="flex items-center justify-center gap-5">
+                          <IoLogoWhatsapp className="text-green-600 text-2xl cursor-pointer transition-transform hover:scale-130" />
+                          <FiPhoneCall className="text-blue-900 text-2xl ml-4 cursor-pointer transition-transform hover:scale-120" />
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -179,7 +198,7 @@ const Viewer = () => {
                       colSpan="4"
                       className="px-6 py-8 text-center text-gray-500"
                     >
-                      No students found
+                      No attendance data available for the selected date.
                     </td>
                   </tr>
                 )}

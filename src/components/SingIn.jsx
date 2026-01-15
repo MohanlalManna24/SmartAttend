@@ -43,7 +43,7 @@ const Form = () => {
   return (
     <div className="flex flex-col items-center mt-10 h-screen">
       <StyledWrapper>
-        <div className="form-box bg-linear-to-br from-indigo-50 via-white to-cyan-50  p-8 rounded-lg shadow-lg">
+        <div className="form-box bg-linear-to-br from-indigo-50 via-white to-cyan-50 p-8 rounded-lg shadow-lg">
           <h2 className="text-2xl font-bold bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-4 border-l-4 border-purple-500 pl-4">
             Login To Your Account
           </h2>
