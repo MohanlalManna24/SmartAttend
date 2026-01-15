@@ -184,8 +184,8 @@ const Viewer = () => {
                           </span>
                         )}
                       </td>
-                       <td className="px-6 py-4 text-center text-gray-600 hidden sm:table-cell">
-                        <div className="flex items-center justify-center gap-5">
+                       <td className="px-6 py-4 text-center text-gray-600">
+                        <div className="flex items-center justify-center gap-0 sm:gap-5">
                           <IoLogoWhatsapp className="text-green-600 text-2xl cursor-pointer transition-transform hover:scale-130" />
                           <FiPhoneCall className="text-blue-900 text-2xl ml-4 cursor-pointer transition-transform hover:scale-120" />
                         </div>
