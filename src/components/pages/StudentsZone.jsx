@@ -305,6 +305,99 @@ const StudentsZone = () => {
             </span>
             <span className="text-2xl font-bold text-red-600">10</span>
           </div>
+
+          {/* Academic Overview - CGPA Section */}
+          <div className="mt-8">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-1 h-8 bg-linear-to-b from-indigo-500 to-blue-600 rounded-full"></div>
+              <h2 className="text-xl font-bold bg-linear-to-r from-indigo-600 to-blue-600 bg-clip-text text-transparent">
+                Academic Overview - CGPA
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 ">
+              {/* 1st Semester */}
+              <div className="cgpaCard group relative bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50 p-4 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-indigo-300 transform hover:scale-105 overflow-hidden">
+                <div className="absolute inset-0 bg-linear-to-br from-indigo-500/0 to-purple-500/0 group-hover:from-indigo-500/10 group-hover:to-purple-500/10 transition-all duration-300"></div>
+                <div className="relative flex flex-col items-center justify-center gap-2">
+                  <span className="text-4xl font-bold bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300">
+                    10
+                  </span>
+                  <p className="text-sm font-medium text-gray-600 group-hover:text-indigo-600 transition-colors">
+                    1ST SEM
+                    
+                  </p>
+                </div>
+              </div>
+
+              {/* 2nd Semester */}
+              <div className="cgpaCard group relative bg-linear-to-br from-emerald-50 via-green-50 to-teal-50 p-4 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-green-300 transform hover:scale-105 overflow-hidden">
+                <div className="absolute inset-0 bg-linear-to-br from-green-500/0 to-teal-500/0 group-hover:from-green-500/10 group-hover:to-teal-500/10 transition-all duration-300"></div>
+                <div className="relative flex flex-col items-center justify-center gap-2">
+                  <span className="text-4xl font-bold bg-linear-to-r from-green-600 to-teal-600 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300">
+                    9
+                  </span>
+                  <p className="text-sm font-medium text-gray-600 group-hover:text-green-600 transition-colors">
+                    2<sup className="text-xs">ND</sup> SEM
+                  </p>
+                </div>
+              </div>
+
+              {/* 3rd Semester */}
+              <div className="cgpaCard group relative bg-linear-to-br from-orange-50 via-amber-50 to-yellow-50 p-4 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-orange-300 transform hover:scale-105 overflow-hidden">
+                <div className="absolute inset-0 bg-linear-to-br from-orange-500/0 to-amber-500/0 group-hover:from-orange-500/10 group-hover:to-amber-500/10 transition-all duration-300"></div>
+                <div className="relative flex flex-col items-center justify-center gap-2">
+                  <span className="text-4xl font-bold bg-linear-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300">
+                    10
+                  </span>
+                  <p className="text-sm font-medium text-gray-600 group-hover:text-orange-600 transition-colors">
+                    3<sup className="text-xs">RD</sup> SEM
+                  </p>
+                </div>
+              </div>
+
+              {/* 4th Semester */}
+              <div className="cgpaCard group relative bg-linear-to-br from-pink-50 via-rose-50 to-red-50 p-4 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-pink-300 transform hover:scale-105 overflow-hidden">
+                <div className="absolute inset-0 bg-linear-to-br from-pink-500/0 to-rose-500/0 group-hover:from-pink-500/10 group-hover:to-rose-500/10 transition-all duration-300"></div>
+                <div className="relative flex flex-col items-center justify-center gap-2">
+                  <span className="text-4xl font-bold bg-linear-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300">
+                    10
+                  </span>
+                  <p className="text-sm font-medium text-gray-600 group-hover:text-pink-600 transition-colors">
+                    4<sup className="text-xs">TH</sup> SEM
+                  </p>
+                </div>
+              </div>
+
+              {/* 5th Semester */}
+              <div className="cgpaCard group relative bg-linear-to-br from-violet-50 via-purple-50 to-fuchsia-50 p-4 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-violet-300 transform hover:scale-105 overflow-hidden">
+                <div className="absolute inset-0 bg-linear-to-br from-violet-500/0 to-fuchsia-500/0 group-hover:from-violet-500/10 group-hover:to-fuchsia-500/10 transition-all duration-300"></div>
+                <div className="relative flex flex-col items-center justify-center gap-2">
+                  <span className="text-4xl font-bold bg-linear-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300">
+                    10
+                  </span>
+                  <p className="text-sm font-medium text-gray-600 group-hover:text-violet-600 transition-colors">
+                    5<sup className="text-xs">TH</sup> SEM
+                  </p>
+                </div>
+              </div>
+              
+
+              {/* Overall CGPA - Highlighted */}
+              <div className="cgpaCard group relative bg-linear-to-br from-cyan-50 via-sky-50 to-blue-50 p-4 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 border-cyan-300 hover:border-cyan-400 transform hover:scale-105 overflow-hidden">
+                <div className="absolute inset-0 bg-linear-to-br from-cyan-500/10 to-blue-500/10 group-hover:from-cyan-500/20 group-hover:to-blue-500/20 transition-all duration-300"></div>
+                <div className="relative flex flex-col items-center justify-center gap-2">
+                  <span className="text-4xl font-bold bg-linear-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300">
+                    9.8
+                  </span>
+                  <p className="text-sm font-semibold text-cyan-700 group-hover:text-cyan-600 transition-colors">
+                    OVERALL
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
         </div>
       </div>
     </div>
