@@ -2,10 +2,15 @@ import React, { useState, useEffect } from "react";
 import { FaUsers, FaCheckCircle, FaClock } from "react-icons/fa";
 import { IoLogoWhatsapp } from "react-icons/io5";
 import { FiPhoneCall } from "react-icons/fi";
+import { MdOutlineDownload } from "react-icons/md";
+import { FaFilePdf } from "react-icons/fa6";
+import { FaFileExcel } from "react-icons/fa6";
+
 import useAttendanceStore from "../store/UseAttendanceStore";
 
 const Viewer = () => {
   const [selectedDate, setSelectedDate] = useState("");
+  const [showDownloadMenu, setShowDownloadMenu] = useState(false);
   const studentsList = useAttendanceStore((state) => state.studentsList);
   const fetchStudents = useAttendanceStore((state) => state.fetchStudents);
 
@@ -16,7 +21,7 @@ const Viewer = () => {
     setSelectedDate(today);
   }, [fetchStudents]);
 
-  // Get today's date 
+  // Get today's date
   const getTodayDate = () => {
     const now = new Date();
     return now.toLocaleDateString("en-GB").replace(/\//g, ".");
@@ -41,7 +46,12 @@ const Viewer = () => {
       return {
         ...student,
         todayStatus: selectedDateAttendance?.status || "pending",
-        checkInTime: selectedDateAttendance?.status === "present" ? selectedDateAttendance.time : selectedDateAttendance?.status === "absent" ? selectedDateAttendance.time : "--:--",
+        checkInTime:
+          selectedDateAttendance?.status === "present"
+            ? selectedDateAttendance.time
+            : selectedDateAttendance?.status === "absent"
+            ? selectedDateAttendance.time
+            : "--:--",
       };
     });
   };
@@ -54,7 +64,8 @@ const Viewer = () => {
     (student) => student.todayStatus === "present"
   ).length;
   const pendingCount = attendanceData.filter(
-    (student) => student.todayStatus === "pending" || student.todayStatus === "absent"
+    (student) =>
+      student.todayStatus === "pending" || student.todayStatus === "absent"
   ).length;
 
   return (
@@ -68,6 +79,39 @@ const Viewer = () => {
 
           {/* Filters by using date */}
           <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative download">
+              <button
+                onClick={() => setShowDownloadMenu(!showDownloadMenu)}
+                className="px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white hover:bg-gray-50 flex items-center gap-2"
+              >
+                <MdOutlineDownload className="text-xl" />
+                <span>Download Report</span>
+              </button>
+              {showDownloadMenu && (
+                <div className="absolute top-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-10 min-w-full">
+                  <button
+                    onClick={() => {
+                      // Add PDF download logic here
+                      setShowDownloadMenu(false);
+                    }}
+                    className="w-full px-4 py-2 hover:bg-gray-100 flex items-center gap-2 text-left"
+                  >
+                    <FaFilePdf className="text-red-600" />
+                    <span>PDF</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      // Add Excel download logic here
+                      setShowDownloadMenu(false);
+                    }}
+                    className="w-full px-4 py-2 hover:bg-gray-100 flex items-center gap-2 text-left"
+                  >
+                    <FaFileExcel className="text-green-600" />
+                    <span>Excel</span>
+                  </button>
+                </div>
+              )}
+            </div>
             <div className="relative">
               <input
                 type="date"
@@ -149,7 +193,7 @@ const Viewer = () => {
                   <th className="px-6 py-4 text-left text-sm font-bold text-gray-700">
                     Status
                   </th>
-                   <th className="px-6 py-4 text-center text-sm font-bold text-gray-700">
+                  <th className="px-6 py-4 text-center text-sm font-bold text-gray-700">
                     Action
                   </th>
                 </tr>
@@ -175,19 +219,33 @@ const Viewer = () => {
                           <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
                             Present
                           </span>
-                        ) :student.todayStatus === "absent" ?(
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">Absent</span>
-                        ) :(
+                        ) : student.todayStatus === "absent" ? (
+                          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
+                            Absent
+                          </span>
+                        ) : (
                           <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-600">
                             <span className="w-2 h-2 bg-gray-400 rounded-full"></span>
                             Pending
                           </span>
                         )}
                       </td>
-                       <td className="px-6 py-4 text-center text-gray-600">
+                      <td className="px-6 py-4 text-center text-gray-600">
                         <div className="flex items-center justify-center gap-0 sm:gap-5">
-                          <IoLogoWhatsapp className="text-green-600 text-2xl cursor-pointer transition-transform hover:scale-130" />
-                          <FiPhoneCall className="text-blue-900 text-2xl ml-4 cursor-pointer transition-transform hover:scale-120" />
+                          <a
+                            href={`https://wa.me/91${
+                              student.mobileNumber
+                            }?text=Hello%20${encodeURIComponent(
+                              student.fullName
+                            )}%2c%0aplease%20submit%20your%20attendance.`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <IoLogoWhatsapp className="text-green-600 text-2xl cursor-pointer transition-transform hover:scale-130" />
+                          </a>
+                          <a href={`tel:+91${student.mobileNumber}`}>
+                            <FiPhoneCall className="text-blue-900 text-2xl ml-4 cursor-pointer transition-transform hover:scale-120" />
+                          </a>
                         </div>
                       </td>
                     </tr>
