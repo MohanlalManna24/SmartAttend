@@ -31,9 +31,37 @@ const StudentsZone = () => {
 
   const handlePresent = async () => {
     try {
+      // Get current student data
+      const currentStudent = useAttendanceStore.getState().studentsList.find(s => s.id === singleStudent.id);
+      const existingAttendance = currentStudent?.attendance || [];
+      
+      // Check if attendance already exists for tomorrow
+      const alreadyMarked = existingAttendance.some(entry => entry.date === tommorow_date);
+      
+      if (alreadyMarked) {
+        alert("Attendance already marked for tomorrow!");
+        return;
+      }
+
+      // Create attendance object for tomorrow
+      const now = new Date();
+      const time = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+      
+      const attendanceEntry = {
+        status: "present",
+        date: tommorow_date,
+        time: time
+      };
+      
+      // Append new attendance entry
+      const updatedAttendance = [...existingAttendance, attendanceEntry];
+      
       await useAttendanceStore
         .getState()
-        .markAttendance(singleStudent.id, "present");
+        .updateStudent(singleStudent.id, { 
+          attendance: updatedAttendance,
+          totalPresent: (currentStudent?.totalPresent || 0) + 1
+        });
 
       // Refresh student data
       await fetchStudents();
@@ -44,16 +72,44 @@ const StudentsZone = () => {
         setSingleStudent(updatedStudent);
       }
 
-      alert("Attendance marked as Present!");
+      alert("Attendance confirmed for tomorrow!");
     } catch (error) {
       alert(error.message);
     }
   };
   const haldleAbsent = async () => {
     try {
+      // Get current student data
+      const currentStudent = useAttendanceStore.getState().studentsList.find(s => s.id === singleStudent.id);
+      const existingAttendance = currentStudent?.attendance || [];
+      
+      // Check if attendance already exists for tomorrow
+      const alreadyMarked = existingAttendance.some(entry => entry.date === tommorow_date);
+      
+      if (alreadyMarked) {
+        alert("Attendance already marked for tomorrow!");
+        return;
+      }
+
+      // Create attendance object for tomorrow
+      const now = new Date();
+      const time = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+      
+      const attendanceEntry = {
+        status: "absent",
+        date: tommorow_date,
+        time: time
+      };
+      
+      // Append new attendance entry
+      const updatedAttendance = [...existingAttendance, attendanceEntry];
+      
       await useAttendanceStore
         .getState()
-        .markAttendance(singleStudent.id, "absent");
+        .updateStudent(singleStudent.id, { 
+          attendance: updatedAttendance,
+          totalAbsent: (currentStudent?.totalAbsent || 0) + 1
+        });
 
       // Refresh student data
       await fetchStudents();
@@ -64,7 +120,7 @@ const StudentsZone = () => {
         setSingleStudent(updatedStudent);
       }
 
-      alert("Attendance marked as Absent!");
+      alert("Absence confirmed for tomorrow!");
     } catch (error) {
       alert(error.message);
     }
@@ -72,7 +128,7 @@ const StudentsZone = () => {
 
   const weeklyAttendance = singleStudent.attendance || [];
 
-  // Get current week's attendance (Sunday to today)
+  // Get current week's attendance (Sunday to Saturday)
   const getCurrentWeekAttendance = () => {
     const today = new Date();
     const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
@@ -82,16 +138,25 @@ const StudentsZone = () => {
     lastSunday.setDate(today.getDate() - currentDay);
     lastSunday.setHours(0, 0, 0, 0);
 
-    // Filter attendance from last Sunday to today
+    // Calculate next Saturday (end of current week)
+    const nextSaturday = new Date(lastSunday);
+    nextSaturday.setDate(lastSunday.getDate() + 6); // 6 days after Sunday = Saturday
+    nextSaturday.setHours(23, 59, 59, 999);
+
+    // Filter attendance from last Sunday to next Saturday (complete week)
     const currentWeekData = weeklyAttendance.filter((entry) => {
-      const entryDate = new Date(entry.date.split(".").reverse().join("-"));
-      return entryDate >= lastSunday && entryDate <= today;
+      const [day, month, year] = entry.date.split(".");
+      const entryDate = new Date(`${year}-${month}-${day}`);
+      entryDate.setHours(0, 0, 0, 0);
+      return entryDate >= lastSunday && entryDate <= nextSaturday;
     });
 
     // Sort by date
     return currentWeekData.sort((a, b) => {
-      const dateA = new Date(a.date.split(".").reverse().join("-"));
-      const dateB = new Date(b.date.split(".").reverse().join("-"));
+      const [dayA, monthA, yearA] = a.date.split(".");
+      const [dayB, monthB, yearB] = b.date.split(".");
+      const dateA = new Date(`${yearA}-${monthA}-${dayA}`);
+      const dateB = new Date(`${yearB}-${monthB}-${dayB}`);
       return dateA - dateB;
     });
   };
