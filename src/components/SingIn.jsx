@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import useAttendanceStore from "./store/UseAttendanceStore";
 import useGlobalStore from "./store/GlobalStore";
+import useNotificationStore from "./store/useNotificationStore";
 import { IoEyeSharp,IoEyeOffSharp } from "react-icons/io5";
 
 const Form = () => {
@@ -31,10 +32,9 @@ const Form = () => {
       );
       if (std) {
         setSingleStudent(std);
-        console.log("Student found");
         setIsSinginTrue()
       } else {
-        console.log("Student not found");
+        // useNotificationStore.getState().notify("Invalid student ID or password. Please try again.", "error");
       }
 
 

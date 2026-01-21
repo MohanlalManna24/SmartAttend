@@ -18,7 +18,6 @@ const StudentsZone = () => {
   const studentsList = useAttendanceStore((state) => state.studentsList);
 
   useEffect(() => {
-    console.log("Single Student Data:", singleStudent);
   }, [singleStudent]);
   // Get current date and time
   const now = new Date();

@@ -8,7 +8,7 @@ const Notification = () => {
 
   const typeStyles = {
     success: "bg-emerald-100 border-emerald-300 text-emerald-800",
-    warning: "bg-rose-100 border-rose-300 text-rose-800",
+    warning: "bg-amber-100 border-yellow-500 text-yellow-800",
     error: "bg-red-100 border-red-300 text-red-800",
     info: "bg-blue-100 border-blue-300 text-blue-800",
   };

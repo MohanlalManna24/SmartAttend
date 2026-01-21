@@ -14,7 +14,7 @@ const useGlobalStore = create((set) => ({
     set({ isOpenForm: false, formMode: "add", editingStudentId: null }),
 
   setIsSinginTrue: () => set({ isSingin: true }),
-  setIsSinginFalse: () => set({ isSingin: false }),
+  setIsSinginFalse: () => set({ isSingin: false, singleStudent: [] }),
   setSingleStudent: (student) => {
     set({ singleStudent: student });
   },

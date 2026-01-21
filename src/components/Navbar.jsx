@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { GiGraduateCap } from "react-icons/gi";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
 import { MdLogout } from "react-icons/md";
@@ -9,7 +9,7 @@ const Navbar = () => {
   const [currentTime, setCurrentTime] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isSinginFalse = useGlobalStore((state) => state.setIsSinginFalse);
-
+  const singleStudent = useGlobalStore((state) => state.singleStudent);
   useEffect(() => {
     const timer = setInterval(() => {
       const hours = String(new Date().getHours()).padStart(2, "0");
@@ -20,12 +20,16 @@ const Navbar = () => {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    console.log("singleStudent:", singleStudent);
+  }, [singleStudent]);
+
+  // Active Nav link Manu styles
   const isActiveStyle = ({ isActive }) => {
     return `bg-gray-200 px-2 rounded-2xl cursor-pointer ${
       isActive ? "bg-gray-100 text-blue-700 border" : "hover:bg-blue-200"
     }`;
   };
-
   const mobileActiveStyle = ({ isActive }) => {
     return `block px-4 py-3 rounded-lg transition-colors ${
       isActive ? "bg-blue-600 text-white" : "hover:bg-gray-200"
@@ -79,7 +83,7 @@ const Navbar = () => {
           <div className="profile bg-amber-300 rounded-full w-8 h-8 md:w-10 md:h-10 cursor-pointer">
             <img
               className="rounded-full object-cover w-full h-full"
-              src="/vite.svg"
+              src={singleStudent.profileUrl || "/public/profile.png"}
               alt="Profile"
             />
           </div>
@@ -92,6 +96,8 @@ const Navbar = () => {
           >
             {isMenuOpen ? <HiX /> : <HiMenuAlt3 />}
           </button>
+
+          {/* Logout Button */}
           <button
             title="LogOut Your Account"
             className="text-red-500 text-2xl bg-orange-100 rounded p-2 cursor-pointer hover:bg-orange-200"
@@ -133,11 +139,6 @@ const Navbar = () => {
           >
             Admin
           </NavLink>
-
-          {/* Mobile Clock */}
-          <div className="px-4 py-3 text-center text-blue-600 font-semibold">
-            {currentTime || "00:00:00"}
-          </div>
         </div>
       </div>
     </nav>
