@@ -44,10 +44,10 @@ const StudentsZone = () => {
       );
 
       if (alreadyMarked) {
-        useNotificationStore.getState().notify(
-          "Attendance already marked for tomorrow!",
-          "warning",
-        );
+        useNotificationStore.getState().notify({
+          message: "Attendance already marked for tomorrow!",
+          type: "warning",
+        });
         return;
       }
 
@@ -82,15 +82,15 @@ const StudentsZone = () => {
         setSingleStudent(updatedStudent);
       }
 
-      useNotificationStore.getState().notify(
-        "Attendance confirmed for tomorrow!",
-        "success",
-      );
+      useNotificationStore.getState().notify({
+        message: "Attendance confirmed for tomorrow!",
+        type: "success",
+      });
     } catch (error) {
-useNotificationStore.getState.notify(
-  `${error.message}`,
-  "error"
-)
+      useNotificationStore.getState().notify({
+        message: `${error.message}`,
+        type: "error",
+      });
     }
   };
   const haldleAbsent = async () => {
@@ -107,10 +107,10 @@ useNotificationStore.getState.notify(
       );
 
       if (alreadyMarked) {
-        useNotificationStore.getState().notify(
-          "Attendance already marked for tomorrow!",
-          "warning",
-        );
+        useNotificationStore.getState().notify({
+          message: "Attendance already marked for tomorrow!",
+          type: "warning",
+        });
         return;
       }
 
@@ -145,16 +145,15 @@ useNotificationStore.getState.notify(
         setSingleStudent(updatedStudent);
       }
 
-      useNotificationStore.getState().notify(
-        "Absence confirmed for tomorrow!",
-        "warning",
-      );
+      useNotificationStore.getState().notify({
+        message: "Absence confirmed for tomorrow!",
+        type: "warning",
+      });
     } catch (error) {
-      alert(error.message);
-      useNotificationStore.getState().notify(
-        `${error.message}`,
-        "error"
-      )
+      useNotificationStore.getState().notify({
+        message: `${error.message}`,
+        type: "error",
+      });
     }
   };
 

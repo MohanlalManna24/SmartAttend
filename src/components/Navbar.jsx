@@ -21,7 +21,6 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    console.log("singleStudent:", singleStudent);
   }, [singleStudent]);
 
   // Active Nav link Manu styles

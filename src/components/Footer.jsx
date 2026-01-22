@@ -11,7 +11,7 @@ const Footer = () => {
           </div>
           <div className="text-center md:text-right">
             <p className="text-gray-400 text-sm">
-              &copy; {new Date().getFullYear()} All rights reserved
+              © {new Date().getFullYear()} All rights reserved
             </p>
             <p className="text-gray-400 text-sm mt-1">
               Developed with ❤️

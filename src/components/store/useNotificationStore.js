@@ -6,7 +6,7 @@ const useNotificationStore = create((set, get) => ({
   message: "Present Confirmation Notification! successfully sent.",
   type: "success", // "info", "success", "error", "warning"
 
-  notify: (message, type) => {
+  notify: ( {message, type }) => {
     set({ show: true, message, type, isExiting: false });
 
     setTimeout(() => {
